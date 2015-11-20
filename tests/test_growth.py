@@ -1,8 +1,4 @@
-from axongrowthsimulatorutils import *
-from plotting import *
-from axon import *
-from postsynapse import *
-from synapse import *
+from retino import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -20,7 +16,7 @@ def produce_axon_growth_demo(id, target, iterations_count):
     axon.grow_cycle(time=i, post_synapses=[], activity=0.0)
   print("Growth demo finished growing for Axon " + str(id) + " in " + str(time.time() - t))
   t = time.time()
-  plot_axon_growth(axon, "Demo/AxonGrowth", 100.0, 100.0, granularity=10)
+  plot_axon_growth(axon, "Plots/AxonGrowth", 100.0, 100.0, granularity=10)
   print("Growth demo finished plotting for Axon " + str(id) + " in " + str(time.time() - t))
 
 def produce_axon_demos_with_postsynapse_coloring(targets):
@@ -44,7 +40,7 @@ def produce_axon_demos_with_postsynapse_coloring(targets):
       ax.set_xlim([0,75.0])
       ax.set_ylim([0,75.0])
     plt.tight_layout()
-    plt.savefig("Demo/synapses/ColoredByTarget-" + str(i) + ".png", dpi=200)
+    plt.savefig("Plots/synapses/ColoredByTarget-" + str(i) + ".png", dpi=200)
     plt.close(fig)
     print("Finished ColoredByTarget-" + str(i) + " in " + str(time.time() - t))
 

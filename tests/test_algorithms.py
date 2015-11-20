@@ -1,8 +1,4 @@
-from axongrowthsimulatorutils import *
-import plotting 
-from axon import *
-from postsynapse import *
-from synapse import *
+from retino import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import EllipseCollection
@@ -10,7 +6,6 @@ import time
 import seaborn as sns
 from PIL import Image
 from multiprocessing import *
-import simvars
 
 def plot_axon_growth_algorithm(origin, end, target):
   t = time.time()
@@ -49,7 +44,7 @@ def plot_axon_growth_algorithm(origin, end, target):
   ax.set_title("Choosing Guide Direction")
   legend = ax.legend(loc='best', shadow=True, fancybox=True)
   plt.tight_layout()
-  plt.savefig("Demo/GrowthAlgorithmGuideDirection-Direction=" + str(desired_and_momentum) + ".pdf")
+  plt.savefig("Plots/GrowthAlgorithmGuideDirection-Direction=" + str(desired_and_momentum) + ".pdf")
   plt.close(fig)
   
   fig, ax = plt.subplots(figsize=(5,5))
@@ -60,7 +55,7 @@ def plot_axon_growth_algorithm(origin, end, target):
   ax.set_aspect(1)
   ax.set_title("A Family of Possible Axon Growths")
   plt.tight_layout()
-  plt.savefig("Demo/GrowthAlgorithmNewSegmentFamily-Direction=" + str(desired_and_momentum) + ".pdf")
+  plt.savefig("Plots/GrowthAlgorithmNewSegmentFamily-Direction=" + str(desired_and_momentum) + ".pdf")
   plt.close(fig)
   print("Finished GrowthAlgorithmGuideDirection-Direction=" + str(desired_and_momentum) + " in " + str(time.time() - t))
 
@@ -79,7 +74,7 @@ def plot_demo_for_synapse_growth(origin, end, pool_size, jitter, points_count):
   legend = ax.legend(loc='upper left', shadow=True)
   ax.set_aspect('equal', 'datalim')
   plt.tight_layout()
-  plt.savefig("Demo/SynapseGrowth-Pool=" + str(pool_size) + "-Jitter=" + str(jitter) + "-Points=" + str(points_count) + ".pdf")
+  plt.savefig("Plots/SynapseGrowth-Pool=" + str(pool_size) + "-Jitter=" + str(jitter) + "-Points=" + str(points_count) + ".pdf")
   plt.close(fig)
 
   print("Finished SynapseGrowth-Pool=" + str(pool_size) + "-Jitter=" + str(jitter) + "-Points=" + str(points_count) + " in " + str(time.time() - t))
@@ -119,40 +114,39 @@ def produce_demo_for_synapses_to_postsynapses():
   ax.set_aspect('equal', 'datalim')
   legend = ax.legend(loc='upper left', shadow=True)
   plt.tight_layout()
-  plt.savefig("Demo/SynapseChoosingForGrowth.pdf")
+  plt.savefig("Plots/SynapseChoosingForGrowth.pdf")
   plt.close(fig)
   print("Finished SynapseChoosingForGrowth in " + str(time.time() - t))
 
 
 def plot_demo_for_colouring_circles_by_gradients():
   t = time.time()
-  number_of_circles = 5000
+  number_of_circles = 2500
   origins = [produce_bounded_random_point(100.0,100.0) for i in range(number_of_circles)]
-  
   colors = [convert_ndpoint_to_gradients(p, [100.0,100.0]) for p in origins]
   
-  fig, axarr = plt.subplots(2)
-  axarr[0].scatter([p[0] for p in origins], [p[1] for p in origins], 
-        color=[c[0] for c in colors], s=15, zorder=5)  
+  for axis in ["X","Y"]:
+    fig, ax = plt.subplots(1)
+    if axis == "X":
+      ax.scatter([p[0] for p in origins], [p[1] for p in origins], 
+            color=[c[0] for c in colors], s=15, zorder=5)  
+    if axis == "Y":
+      ax.scatter([p[0] for p in origins], [p[1] for p in origins], 
+            color=[c[1] for c in colors], s=15, zorder=5)  
 
-  axarr[1].scatter([p[0] for p in origins], [p[1] for p in origins], 
-        color=[c[1] for c in colors], s=15, zorder=5)  
-
-  axarr[0].set_title("Colored Points by Gradient Along X")
-  axarr[1].set_title("Colored Points by Gradient Along Y")
-  for ax in axarr:
+    axarr[0].set_title("Colored Points by Gradient Along X")
     ax.set_xlim([0,100.0])
     ax.set_ylim([0,100.0])
-    ax.set_aspect('equal', 'datalim')
-  plt.tight_layout()
-  plt.savefig("Demo/ColoredPointsByGradient.pdf")
-  plt.close(fig)  
+    plt.tight_layout()
+    plt.savefig("Plots/ColoredPointsByGradient-" + axis + ".pdf")
+    plt.close(fig)  
+
   print("Finished ColoredPointsByGradient in " + str(time.time() - t))
 
 
 def plot_demo_for_activity_black_white_signal(image_str):
   t = time.time()
-  origins, colors = image_to_activity_points(image_str)
+  origins, colors = image_to_activity_points("../images/" + image_str)
   origins = add_jitter_to_points(origins, .5)
   fig, ax = plt.subplots(1)
   ax.scatter([p[0] for p in origins], [p[1] for p in origins], c=colors, s=5)
@@ -160,7 +154,7 @@ def plot_demo_for_activity_black_white_signal(image_str):
   ax.set_ylim([0,100.0])
   ax.set_aspect('equal', 'datalim')
   plt.tight_layout()
-  plt.savefig("Demo/GrayscalePointsByActivity-" + image_str[:-4] + ".png", dpi=300)
+  plt.savefig("Plots/GrayscalePointsByActivity-" + image_str[:-4] + ".png", dpi=300)
   print("Finished GrayscalePointsByActivity-" + image_str[:-4] + " in " + str(time.time() - t))
 
 

@@ -1,8 +1,4 @@
-from axongrowthsimulatorutils import *
-from plotting import *
-from axon import *
-from postsynapse import *
-from synapse import *
+from retino import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,50 +7,6 @@ import time
 
 
 sns.set_style("darkgrid")
-
-def produce_axon_growth_demos():
-  targets = [
-    [75, 75], 
-    [125, 125],
-    [75, 0],
-    [10, 10],
-    [0, 75]
-  ]
-  axons = Axon(id=i, target = targets[i]) for i in range(len(targets))]
-  for axon in axons:
-    for i in range(300):
-      axon.grow_cycle(time=i, post_synapses=[], activity=0.0)
-    generate_axon_growth_video(axon, "Demo/AxonGrowth", 150.0, 150.0)
-
-
-def produce_axon_demos_with_postsynapse_coloring():
-  targets = add_jitter_to_points([np.asarray([25.0,25.0])] * 10, 10) 
-  targets.extend(add_jitter_to_points([np.asarray([60.0,60.0])] * 10, 10))
-  targets.extend(add_jitter_to_points([np.asarray([45.0,25.0])] * 10, 10))
-  targets.extend(add_jitter_to_points([np.asarray([25.0,45.0])] * 10, 10))
-  targets.extend(add_jitter_to_points([np.asarray([50.0,50.0])] * 10, 10))
-
-  post_synapses = [PostSynapse(i, size=20, tectum_length=75.0, tectum_width=75.0) for i in range(100)]
-  axons = [Axon(id=i, target = targets[i]) for i in range(len(targets))]
-  for axon in axons:
-    t = time.time()
-    for i in range(200):
-      axon.grow_cycle(time=i, post_synapses=post_synapses, activity=0.0)
-    print("Finished Axon ", axon.id, " in ", time.time() - t, "s.")
-
-  for i in range(0, 20):
-    fig, axarr = plt.subplots(2)
-    for axon in axons:
-      add_post_synapses_to_axarr_by_axon(axon, axarr, i, 75.0, 75.0)
-    axarr[0].set_title("Colored Points by Gradient Along X")
-    axarr[1].set_title("Colored Points by Gradient Along Y")
-    for ax in axarr:
-      ax.set_aspect('equal', 'datalim')
-      ax.set_xlim([0,75.0])
-      ax.set_ylim([0,75.0])
-    plt.tight_layout()
-    plt.savefig("Demo/synapses/ColoredByTarget-" + str(i) + ".png", dpi=200)
-    plt.close(fig)
 
 def produce_axon_interaction_demos_with_postsynapse_coloring():
   targets = add_jitter_to_points([np.asarray([25.0,25.0])] * 4, 10) 
@@ -100,7 +52,7 @@ def produce_axon_interaction_demos_with_postsynapse_coloring():
              facecolors='b',
              offsets=dots_origins[dots_index], transOffset=ax.transData, alpha=0.1))
     plt.tight_layout()
-    plt.savefig("Demo/synapsesInteractions/ColoredByTarget-" + str(i) + ".png", dpi=200)
+    plt.savefig("Plots/synapsesInteractions/ColoredByTarget-" + str(i) + ".png", dpi=200)
     plt.close(fig)
 
 # produce_axon_interaction_demos_with_postsynapse_coloring()
