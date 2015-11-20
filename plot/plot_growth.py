@@ -58,6 +58,6 @@ if __name__ == '__main__':
 
   targets = np.mgrid[20:100:20,20:100:20].reshape(2,-1).T
   targets = add_jitter_to_points(targets, 5)
-  # p = Process(target=produce_axon_demos_with_postsynapse_coloring, args=(targets,))
-  # p.start()
+  p = Process(target=produce_axon_demos_with_postsynapse_coloring, args=(targets,))
+  p.start()
   print("Started process for postsynapse colouring")
