@@ -1,5 +1,4 @@
-import retino.retinoutil
-
+from retino.retinoutil import *
 import numpy as np
 
 class PostSynapse(object):

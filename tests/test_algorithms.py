@@ -26,10 +26,10 @@ def plot_axon_growth_algorithm(origin, end, target):
   results = []
   for i in range(50):
     r = np.random.normal(3.0,1.0, size=1)[0]
-    noise = np.random.normal(0,.5,size=1)[0]
+    noise = np.random.normal(0,.4,size=1)[0]
     theta = prenoise_pol + noise
     cart_result = pol_to_cart(np.asarray([r,theta]))
-    results.append(cart_result)  
+    results.append(cart_result)
 
   desired_direction = desired_direction * 3
   momentum_direction = momentum_direction * 3
@@ -41,10 +41,11 @@ def plot_axon_growth_algorithm(origin, end, target):
   ax.plot([0,momentum_direction[0]], [0,momentum_direction[1]], color="r", linewidth=3.0, label="Momentum Direction")
   ax.plot([0,desired_and_momentum[0]], [0,desired_and_momentum[1]], color="b", linewidth=3.0, label="Weighted Guide Direction")
   ax.set_aspect(1)
-  ax.set_title("Choosing Guide Direction")
+  ax.set_xlim([-4,4])
+  ax.set_ylim([-4,4])
   legend = ax.legend(loc='best', shadow=True, fancybox=True)
   plt.tight_layout()
-  plt.savefig("Plots/GrowthAlgorithmGuideDirection-Direction=" + str(desired_and_momentum) + ".pdf")
+  plt.savefig(generate_tex_friendly_filename("Plots/GrowthAlgorithmGuideDirection-Direction=" + str(desired_and_momentum)) + ".pdf")
   plt.close(fig)
   
   fig, ax = plt.subplots(figsize=(5,5))
@@ -53,9 +54,10 @@ def plot_axon_growth_algorithm(origin, end, target):
   for i in range(50):
     ax.plot([0, results[i][0]], [0, results[i][1]], color="r", alpha=.3, linewidth=1.0)
   ax.set_aspect(1)
-  ax.set_title("A Family of Possible Axon Growths")
+  ax.set_xlim([-4,4])
+  ax.set_ylim([-4,4])
   plt.tight_layout()
-  plt.savefig("Plots/GrowthAlgorithmNewSegmentFamily-Direction=" + str(desired_and_momentum) + ".pdf")
+  plt.savefig(generate_tex_friendly_filename("Plots/GrowthAlgorithmNewSegmentFamily-Direction=" + str(desired_and_momentum)) + ".pdf")
   plt.close(fig)
   print("Finished GrowthAlgorithmGuideDirection-Direction=" + str(desired_and_momentum) + " in " + str(time.time() - t))
 
@@ -66,15 +68,14 @@ def plot_demo_for_synapse_growth(origin, end, pool_size, jitter, points_count):
   jittered_pool = add_jitter_to_points(pool, jitter)
   origins = choose_points_subset(jittered_pool, points_count)
   fig, ax = plt.subplots(figsize=(5,5))
-  ax.scatter([p[0] for p in pool], [p[1] for p in pool], label="1. Pool of Points Along Axon", color="y", s=4)
-  ax.scatter([p[0] for p in jittered_pool], [p[1] for p in jittered_pool], label="2. Pool with 0.1 Jitter", color="r", s=10)
-  ax.scatter([p[0] for p in origins], [p[1] for p in origins], label="3. Chosen Origins for Post Synaptic Attempts", color="b", s=20)  
-  ax.set_title("PostSynaptic Connection Growth")
+  ax.scatter([p[0] for p in pool], [p[1] for p in pool], label="1. Pool of Points Along Axon", color="r", s=30)
+  ax.scatter([p[0] for p in jittered_pool], [p[1] for p in jittered_pool], label="2. Pool with 0.1 Jitter", color="c", s=30)
+  ax.scatter([p[0] for p in origins], [p[1] for p in origins], label="3. Chosen Origins for Post Synaptic Attempts", color="0", s=40)  
 
   legend = ax.legend(loc='upper left', shadow=True)
   ax.set_aspect('equal', 'datalim')
   plt.tight_layout()
-  plt.savefig("Plots/SynapseGrowth-Pool=" + str(pool_size) + "-Jitter=" + str(jitter) + "-Points=" + str(points_count) + ".pdf")
+  plt.savefig(generate_tex_friendly_filename("Plots/SynapseGrowth-Pool=" + str(pool_size) + "-Jitter=" + str(jitter) + "-Points=" + str(points_count)) + ".pdf")
   plt.close(fig)
 
   print("Finished SynapseGrowth-Pool=" + str(pool_size) + "-Jitter=" + str(jitter) + "-Points=" + str(points_count) + " in " + str(time.time() - t))
@@ -90,7 +91,7 @@ def produce_demo_for_synapses_to_postsynapses():
   circle_origins = [produce_bounded_random_point(15.0,15.0) for i in range(number_of_circles)]
   circle_radiuses = [np.random.normal(1.5, 0.5, size=1)[0] for i in range(number_of_circles)]
 
-  fig, ax = plt.subplots()
+  fig, ax = plt.subplots(1, figsize=(3,3))
   ax.plot([origin[0], end[0]], [origin[1], end[1]], color="y", linewidth=1.0, label="Axon Segment")
   ax.scatter([p[0] for p in origins], [p[1] for p in origins], label="Chosen Origins for Post Synaptic Attempts", 
         color="b", s=15, zorder=5)  
@@ -114,7 +115,7 @@ def produce_demo_for_synapses_to_postsynapses():
   ax.set_aspect('equal', 'datalim')
   legend = ax.legend(loc='upper left', shadow=True)
   plt.tight_layout()
-  plt.savefig("Plots/SynapseChoosingForGrowth.pdf")
+  plt.savefig(generate_tex_friendly_filename("Plots/SynapseChoosingForGrowth") + ".pdf")
   plt.close(fig)
   print("Finished SynapseChoosingForGrowth in " + str(time.time() - t))
 
@@ -126,19 +127,19 @@ def plot_demo_for_colouring_circles_by_gradients():
   colors = [convert_ndpoint_to_gradients(p, [100.0,100.0]) for p in origins]
   
   for axis in ["X","Y"]:
-    fig, ax = plt.subplots(1)
+    fig, ax = plt.subplots(1, figsize=(3,3))
     if axis == "X":
       ax.scatter([p[0] for p in origins], [p[1] for p in origins], 
             color=[c[0] for c in colors], s=15, zorder=5)  
     if axis == "Y":
       ax.scatter([p[0] for p in origins], [p[1] for p in origins], 
             color=[c[1] for c in colors], s=15, zorder=5)  
-
-    axarr[0].set_title("Colored Points by Gradient Along X")
+    ax.set_title("Colored Points by Gradient Along " + axis)
     ax.set_xlim([0,100.0])
     ax.set_ylim([0,100.0])
+    ax.set_aspect(1)
     plt.tight_layout()
-    plt.savefig("Plots/ColoredPointsByGradient-" + axis + ".pdf")
+    plt.savefig(generate_tex_friendly_filename("Plots/ColoredPointsByGradient-Axis=" + axis + "-NumCircle=" + str(number_of_circles)) + ".png", dpi=300)
     plt.close(fig)  
 
   print("Finished ColoredPointsByGradient in " + str(time.time() - t))
@@ -146,15 +147,15 @@ def plot_demo_for_colouring_circles_by_gradients():
 
 def plot_demo_for_activity_black_white_signal(image_str):
   t = time.time()
-  origins, colors = image_to_activity_points("../images/" + image_str)
-  origins = add_jitter_to_points(origins, .5)
-  fig, ax = plt.subplots(1)
-  ax.scatter([p[0] for p in origins], [p[1] for p in origins], c=colors, s=5)
+  origins, colors = image_to_activity_points("../images/" + image_str, resolution=100)
+  origins = add_jitter_to_points(origins, .25)
+  fig, ax = plt.subplots(1, figsize=(3,3))
+  ax.scatter([p[0] for p in origins], [p[1] for p in origins], c=colors, s=6)
   ax.set_xlim([0,100.0])
   ax.set_ylim([0,100.0])
-  ax.set_aspect('equal', 'datalim')
+  ax.set_aspect(1)
   plt.tight_layout()
-  plt.savefig("Plots/GrayscalePointsByActivity-" + image_str[:-4] + ".png", dpi=300)
+  plt.savefig(generate_tex_friendly_filename("Plots/GrayscalePointsByActivity-" + image_str[:-4]) + ".png", dpi=300)
   print("Finished GrayscalePointsByActivity-" + image_str[:-4] + " in " + str(time.time() - t))
 
 

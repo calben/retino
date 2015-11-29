@@ -21,9 +21,9 @@ def segments_to_lines(segments):
 #   theta_average = np.average(thetas)
 #   return cart_to_pol(np.asarray([1, theta_average]))
 
-def generate_random_points_along_line(origin, direction, pool_size, points_count):
+def generate_random_points_along_line(origin, direction, pool_size, points_count, jitter=0.4):
   pool = generate_points_along_line(origin, direction, pool_size)
-  jittered_pool = add_jitter_to_points(pool, 0.4)
+  jittered_pool = add_jitter_to_points(pool, jitter)
   origins = choose_points_subset(jittered_pool, points_count)
   return origins
 
@@ -76,13 +76,13 @@ def get_average_point_error(target, points):
   else:
     return 99999
 
-def image_to_activity_points(image_str):
+def image_to_activity_points(image_str, resolution=100):
   im = Image.open(image_str)
   activities = []
-  for y in range(100):
-    for x in range(100):
+  for y in range(resolution):
+    for x in range(resolution):
       activities.append(1.0 - np.average(np.asarray(im.getpixel((x,99-y))))/255.0)
-  origins = list(zip(list(range(100))*100, np.asarray([[i]*100 for i in range(100)]).flatten()))
+  origins = list(zip(list(range(resolution))*resolution, np.asarray([[i]*resolution for i in range(resolution)]).flatten()))
   return [origins, activities]
 
 def fire_by_activity_points(target, activity_origins):
@@ -94,3 +94,14 @@ def fire_by_activity_points(target, activity_origins):
       best_match_activity = activity[1]
       distance = curr_distance
   return best_match_activity
+
+def generate_tex_friendly_filename(filename):
+  filename = filename.replace(".",",")
+  filename = filename.replace(" ","-")
+  return filename
+
+def choose_to_branch(a=6, b=1):
+  if np.random.normal(a,b,size=1)[0] > 0.95:
+    return True
+  else:
+    return False

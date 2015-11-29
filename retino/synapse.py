@@ -1,5 +1,4 @@
-import retino.postsynapse
-import retino.axonsegment
+from retino import *
 
 class synapse(object):
 

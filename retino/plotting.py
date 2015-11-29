@@ -69,7 +69,7 @@ def plot_axon_growth(axon, output_directory, xlim, ylim, granularity=1):
       ax.set_ylim([0,ylim])
       ax.set_aspect(xlim/ylim)
       plt.tight_layout()
-      plt.savefig(output_directory + "/" + number + ".png", dpi=100)
+      plt.savefig(output_directory + "/" + number + ".png", dpi=100, pad_inches=0)
       plt.close(fig)
 
 def add_post_synapses_to_axarr_by_axon(axon, axarr, time, xlim, ylim):

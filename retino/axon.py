@@ -1,5 +1,5 @@
-import retino.retinoutil
 from retino.axonsegment import *
+from retino.retinoutil import *
 
 import numpy as np
 import os
@@ -22,10 +22,11 @@ class Axon(object):
         origin = np.array([0.0,Axon.tectum_width/2 + target[1]/15])
       else:
         origin = np.array([0.0,Axon.tectum_width/2 - target[1]/15])
-      self.segments.append(AxonSegment(self.id * 10000, None, self, origin=origin, end=np.add(origin, np.array([0.1, 0.1]))))
+      self.segments.append(AxonSegment(self.id * 10000, None, self, origin=origin, end=np.add(origin, np.array([0.1, 0.1])), branch_number=0))
 
     self.history = []
     self.growth_rate = 1
+    self.distance_of_branch_closest_to_target = 1000
 
   def add_segment(self, segment):
     self.segments.append(segment)
@@ -50,9 +51,16 @@ class Axon(object):
       segment.activity = 0
 
   def grow(self, time, post_synapses):
-    segment_of_origin = self.segments[select_item_from_list_by_beta_distribution(len(self.segments), 8, 1)]
+    segment_of_origin = None
+    segment_of_origin = self.segments[select_item_from_list_by_beta_distribution(len(self.segments), 8 - (15/self.distance_of_branch_closest_to_target), 1)]
+    #if choose_to_branch() and len(self.segments) > 5:
+    #  segment_of_origin = self.segments[select_item_from_list_by_beta_distribution(len(self.segments), 3,2)]
+    #else:
+    #  segment_of_origin = self.segments[-1]
     segment_of_origin.stabilise(Axon.branching_stabilisation)
     segment_of_origin.grow(self.segments[-1].id + 1, self, self.target, post_synapses)
+    if(np.linalg.norm(self.segments[-1].origin - self.target) < self.distance_of_branch_closest_to_target):
+      self.distance_of_branch_closest_to_target = np.linalg.norm(self.segments[-1].origin - self.target)
 
   def __repr__(self):
     items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())
