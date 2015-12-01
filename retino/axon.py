@@ -52,7 +52,7 @@ class Axon(object):
 
   def grow(self, time, post_synapses):
     segment_of_origin = None
-    segment_of_origin = self.segments[select_item_from_list_by_beta_distribution(len(self.segments), 8 - (15/self.distance_of_branch_closest_to_target), 1)]
+    segment_of_origin = self.segments[select_item_from_list_by_beta_distribution(len(self.segments), 15 - (15/self.distance_of_branch_closest_to_target), 1)]
     #if choose_to_branch() and len(self.segments) > 5:
     #  segment_of_origin = self.segments[select_item_from_list_by_beta_distribution(len(self.segments), 3,2)]
     #else:
@@ -61,6 +61,8 @@ class Axon(object):
     segment_of_origin.grow(self.segments[-1].id + 1, self, self.target, post_synapses)
     if(np.linalg.norm(self.segments[-1].origin - self.target) < self.distance_of_branch_closest_to_target):
       self.distance_of_branch_closest_to_target = np.linalg.norm(self.segments[-1].origin - self.target)
+      if self.distance_of_branch_closest_to_target < 2:
+        self.distance_of_branch_closest_to_target = 2
 
   def __repr__(self):
     items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())

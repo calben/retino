@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import retino
 from PIL import Image
 
 def cart_to_pol(nparr):
@@ -74,7 +75,7 @@ def get_average_point_error(target, points):
   if(len(points) > 10):
     return np.average([np.linalg.norm(target-p) for p in points])
   else:
-    return 99999
+    return retino.TECTUM_WIDTH
 
 def image_to_activity_points(image_str, resolution=100):
   im = Image.open(image_str)

@@ -78,4 +78,4 @@ def add_post_synapses_to_axarr_by_axon(axon, axarr, time, xlim, ylim):
   colors = convert_ndpoint_to_gradients(axon.target, [xlim, ylim])
   for i in range(len(axarr)):
     axarr[i].scatter([p[0] for p in points], [p[1] for p in points],
-    color = colors[i], s=1, alpha=.4)
+    color = colors[i], s=3, alpha=.4)
