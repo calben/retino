@@ -45,6 +45,8 @@ class Axon(object):
         segment.destabilise()
       self.grow(time, post_synapses)
       self.segments[0].send_activity(activity)
+    for synapse in self.synapses:
+      synapse.degrade(1)
 
   def flat_line(self):
     for segment in self.segments:

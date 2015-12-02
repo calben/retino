@@ -75,7 +75,10 @@ def get_average_point_error(target, points):
   if(len(points) > 10):
     return np.average([np.linalg.norm(target-p) for p in points])
   else:
-    return retino.TECTUM_WIDTH
+    return np.NaN
+
+def get_average_of_points(points):
+  return np.asarray([np.nanmean([p[0] for p in points]),np.nanmean([p[1] for p in points])])
 
 def image_to_activity_points(image_str, resolution=100):
   im = Image.open(image_str)

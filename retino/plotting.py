@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
+from retino.retinoutil import *
 
 def convert_post_synapse_activity_to_rgb(activity):
   if(activity > .5):
@@ -78,4 +79,13 @@ def add_post_synapses_to_axarr_by_axon(axon, axarr, time, xlim, ylim):
   colors = convert_ndpoint_to_gradients(axon.target, [xlim, ylim])
   for i in range(len(axarr)):
     axarr[i].scatter([p[0] for p in points], [p[1] for p in points],
-    color = colors[i], s=3, alpha=.4)
+    color = colors[i], s=5, alpha=.4)
+
+def add_average_post_synapse_to_axarr_by_axon(axon, axarr, time, xlim, ylim):
+  history = axon.history[time]
+  points = history[3]
+  p = get_average_of_points(points)
+  colors = convert_ndpoint_to_gradients(axon.target, [xlim, ylim])
+  for i in range(len(axarr)):
+    axarr[i].scatter(p[0],p[1],
+    color = colors[i], s=5, alpha=.4)

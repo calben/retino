@@ -21,6 +21,7 @@ class AxonSegment(object):
     self.children = []
     if(parent != None):
       parent.add_child(self)
+    self.should_go_away = False
     
 
   def add_child(self, axon_segment):
@@ -34,6 +35,9 @@ class AxonSegment(object):
 
     desired_direction_weight = 1.1
     momentum_direction_weight = 1
+    if(self.should_go_away):
+      desired_direction_weight = 1
+      momentum_direction_weight = 1
     desired_direction = get_unit_direction_vector(new_segment_origin, target)
     momentum_direction = get_unit_direction_vector(self.origin, self.end)
     desired_and_momentum = desired_direction_weight * desired_direction + momentum_direction_weight * momentum_direction
@@ -42,6 +46,8 @@ class AxonSegment(object):
 
     r = np.random.normal(retino.AXON_SEGMENT_LENGTH_AVG,retino.AXON_SEGMENT_LEGNTH_STD, size=1)[0]
     noise = np.random.normal(0,retino.AXON_SEGMENT_NOISE_STD,size=1)[0]
+    if(self.should_go_away):
+      self.noise = np.random.normal(0,2,size=1)[0]
     theta = prenoise_pol + noise
     cart_result = pol_to_cart(np.asarray([r,theta]))
 
@@ -61,6 +67,7 @@ class AxonSegment(object):
         connection = synapse(i, self, post_synapses[i], origin=origin)
         self.synapses.append(connection)
         self.owner.add_synapse(connection)
+        post_synapses[i].synapses.append(connection)
 
   def destabilise(self):
     self.stability -= 1

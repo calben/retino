@@ -9,11 +9,18 @@ class synapse(object):
     self.postsynapse = postsynapse
     self.size = size
     self.activity = 0
-    self.stability = 10
+    self.stability = 50
 
   def fire(self, amount):
     self.activity += amount
     self.axonsegment.propagate_activity(amount)
+
+  def degrade(self, amount):
+    self.stability = self.stability - amount
+    if self.stability <= 0:
+      self.axonsegment.synapses.remove(self)
+      self.axonsegment.owner.synapses.remove(self)
+      self.postsynapse.synapses.remove(self)
 
   def flat_line(self):
     self.activity = 0.0

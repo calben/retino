@@ -14,9 +14,9 @@ class PostSynapse(object):
 
   def fire(self, amount):
     self.activity += amount
-    if(self.activity > 1.0):
-      for c in self.synapses:
-        c.send_stabiliser(3.0)
+#    if(self.activity > 1.0):
+#      for c in self.synapses:
+#        c.send_stabiliser(3.0)
 
   def flat_line(self):
     self.activity = 0.0
