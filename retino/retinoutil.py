@@ -16,11 +16,11 @@ def pol_to_cart(nparr):
 def segments_to_lines(segments):
   return [[tuple(segment.origin), tuple(segment.end)] for segment in segments]  
 
-# def generate_weighted_direction(weights, directions):
-#   thetas = [cart_to_pol(direction)[1] for direction in directions]
-#   thetas_weighted = np.multiply(weights, thetas)
-#   theta_average = np.average(thetas)
-#   return cart_to_pol(np.asarray([1, theta_average]))
+def generate_weighted_direction(weights, directions):
+  thetas = [cart_to_pol(direction)[1] for direction in directions]
+  thetas_weighted = np.multiply(weights, thetas)
+  theta_average = np.average(thetas)
+  return cart_to_pol(np.asarray([1, theta_average]))
 
 def generate_random_points_along_line(origin, direction, pool_size, points_count, jitter=0.4):
   pool = generate_points_along_line(origin, direction, pool_size)

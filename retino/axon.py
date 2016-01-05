@@ -11,9 +11,10 @@ class Axon(object):
   tectum_length = 300.0
   tectum_width = 100.0
 
-  def __init__(self, id=None, target=np.array([0.0,0.0])):
+  def __init__(self, id=None, target=np.array([0.0,0.0]), fake_target=None):
     self.id = id
     self.target = target
+    self.fake_target = fake_target
     self.segments = []
     self.synapses = []
     if(len(self.segments) == 0):
@@ -24,9 +25,20 @@ class Axon(object):
         origin = np.array([0.0,Axon.tectum_width/2 - target[1]/15])
       self.segments.append(AxonSegment(self.id * 10000, None, self, origin=origin, end=np.add(origin, np.array([0.1, 0.1])), branch_number=0))
 
+    if(fake_target != None):
+      self.use_fake_target = True
+    else:
+      self.use_fake_target = False
     self.history = []
     self.growth_rate = 1
     self.distance_of_branch_closest_to_target = 1000
+
+  def get_current_targeting(self):
+    if self.use_fake_target:
+      return self.fake_target
+    else:
+      return self.target
+
 
   def add_segment(self, segment):
     self.segments.append(segment)
@@ -60,9 +72,9 @@ class Axon(object):
     #else:
     #  segment_of_origin = self.segments[-1]
     segment_of_origin.stabilise(Axon.branching_stabilisation)
-    segment_of_origin.grow(self.segments[-1].id + 1, self, self.target, post_synapses)
-    if(np.linalg.norm(self.segments[-1].origin - self.target) < self.distance_of_branch_closest_to_target):
-      self.distance_of_branch_closest_to_target = np.linalg.norm(self.segments[-1].origin - self.target)
+    segment_of_origin.grow(self.segments[-1].id + 1, self, self.get_current_targeting(), post_synapses)
+    if(np.linalg.norm(self.segments[-1].origin - self.get_current_targeting()) < self.distance_of_branch_closest_to_target):
+      self.distance_of_branch_closest_to_target = np.linalg.norm(self.segments[-1].origin - self.get_current_targeting())
       if self.distance_of_branch_closest_to_target < 2:
         self.distance_of_branch_closest_to_target = 2
 

@@ -73,13 +73,13 @@ def plot_axon_growth(axon, output_directory, xlim, ylim, granularity=1):
       plt.savefig(output_directory + "/" + number + ".png", dpi=100, pad_inches=0)
       plt.close(fig)
 
-def add_post_synapses_to_axarr_by_axon(axon, axarr, time, xlim, ylim):
+def add_post_synapses_to_axarr_by_axon(axon, axarr, time, xlim, ylim, size=5):
   history = axon.history[time]
   points = history[3]
   colors = convert_ndpoint_to_gradients(axon.target, [xlim, ylim])
   for i in range(len(axarr)):
     axarr[i].scatter([p[0] for p in points], [p[1] for p in points],
-    color = colors[i], s=5, alpha=.4)
+    color = colors[i], s=size, alpha=.4)
 
 def add_average_post_synapse_to_axarr_by_axon(axon, axarr, time, xlim, ylim):
   history = axon.history[time]

@@ -14,6 +14,8 @@ class synapse(object):
   def fire(self, amount):
     self.activity += amount
     self.axonsegment.propagate_activity(amount)
+    if(self.activity > 1):
+      self.stability = self.stability + 0.2
 
   def degrade(self, amount):
     self.stability = self.stability - amount
