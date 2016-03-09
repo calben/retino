@@ -8,3 +8,4 @@ experiments/plots/*
 scripts/models/*
 scripts/figs/*
 imagery/*
+retino/__pycache__/*
